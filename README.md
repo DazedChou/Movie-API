@@ -46,9 +46,13 @@ POST /api/add-movie
 
 - Adds a new movie
 
-Put /api/update-review/
+Put /api/update-review
 
 - Updates a review
+
+Delete /api/movie/:id
+
+- Deletes a movie
 
 ## Built With
 
