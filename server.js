@@ -12,7 +12,7 @@ app.use(express.json());
 //connect to db
 var connection = mysql.createConnection(
   {
-    host: "127.0.0.1",
+    host: "localhost",
     // MySQL username,
     user: "root",
     // MySQL password
@@ -30,13 +30,13 @@ app.get("/api/movies", (req, res) => {
   });
 });
 
+
 // add a new movie
 app.post("/api/add-movie", (req, res) => {
   console.log("req body", req.body.movie_name);
   const { movie_name } = req.body;
   connection.query(
     `INSERT INTO movies (movie_name) VALUES("${movie_name}");`,
-
     function (err, results) {
       console.log(results);
     }
@@ -46,6 +46,32 @@ app.post("/api/add-movie", (req, res) => {
     res.json(results);
   });
 });
+
+//update review
+app.put("/api/update-review", (req,res) => {
+  const {review, movie_id} = req.body;
+  connection.query(`UPDATE reviews SET review = ? WHERE id = ?`,[review,movie_id], function (err,results){
+    console.log(results);
+  });
+  connection.query(`SELECT * from reviews;`, function (err, results) {
+    console.log(results);
+    res.json(results);
+  });
+});
+
+// Delete movie
+app.delete("/api/movie/:id", (req,res) => {
+  const id = req.params.id;
+  console.log("id: ",id);
+  connection.query(`DELETE FROM movies WHERE id = ?;`,id,function (err,results) {
+    console.log(results);
+  });
+  connection.query(`SELECT * from movies;`, function (err, results) {
+    console.log(results);
+    res.json(results);
+  });
+})
+
 //configure app to listen on specified port above
 app.listen(PORT, () => {
   console.log("App listening on PORT " + PORT);
