@@ -22,9 +22,28 @@ var connection = mysql.createConnection(
   console.log(`Connected to the empoloyeeTracker database.`)
 );
 
+//get all movies
 app.get("/api/movies", (req, res) => {
   connection.query(`SELECT * from movies;`, function (err, results) {
     console.log(results);
+    res.json(results);
+  });
+});
+
+// add a new movie
+app.post("/api/add-movie", (req, res) => {
+  console.log("req body", req.body.movie_name);
+  const { movie_name } = req.body;
+  connection.query(
+    `INSERT INTO movies (movie_name) VALUES("${movie_name}");`,
+
+    function (err, results) {
+      console.log(results);
+    }
+  );
+  connection.query(`SELECT * from movies;`, function (err, results) {
+    console.log(results);
+    res.json(results);
   });
 });
 //configure app to listen on specified port above
